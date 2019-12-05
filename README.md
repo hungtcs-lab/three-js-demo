@@ -1,2 +1,4 @@
-# webpack-typescript-starter
+Webpack Typescript Starter
+====
+
 webpack starter for typescript
