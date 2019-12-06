@@ -1,5 +1,5 @@
 import Stats from 'stats.js';
-import { OrbitControls } from './controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Scene, PerspectiveCamera, WebGLRenderer, BoxGeometry, MeshBasicMaterial, Mesh, TextureLoader, DoubleSide } from 'three';
 
 export class Application {
