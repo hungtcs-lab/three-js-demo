@@ -12,6 +12,7 @@ export class Application {
   private stats: Stats;
   private gltfLoader: GLTFLoader;
   private walkAction: AnimationAction;
+  private orbitControls: OrbitControls;
   private animationMixer: AnimationMixer;
   // 动画是否暂停
   private paused: boolean = false;
@@ -22,19 +23,19 @@ export class Application {
     this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.renderer = new WebGLRenderer({ antialias: true });
     this.gltfLoader = new GLTFLoader();
+    this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
     this.animationMixer = new AnimationMixer(this.scene);
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
     window.addEventListener('resize', () => this.onWindowResize());
 
-    this.camera.position.set(0, 5, 5);
+    this.camera.position.set(-0.5, 2, 1);
 
     this.stats = new Stats();
     this.stats.showPanel(0);
     window.document.body.appendChild(this.stats.dom);
 
-    new OrbitControls(this.camera, this.renderer.domElement);
 
     const planeBufferGeometry = new PlaneBufferGeometry(100, 100);
     const plane = new Mesh(planeBufferGeometry, new MeshBasicMaterial({ color: 0xFFFFFF, side: DoubleSide }));
@@ -46,8 +47,11 @@ export class Application {
     this.gltfLoader.load('../assets/Soldier.glb', gltf => {
       console.log(gltf);
       gltf.scene.name = 'Soldier';
+      gltf.scene.rotation.y = Math.PI;
       this.scene.add(gltf.scene);
       this.scene.add(new AmbientLight(0xFFFFFF, 2));
+
+      this.orbitControls.target.set(0, 1, 0);
 
       const animationClip = gltf.animations.find(animationClip => animationClip.name === 'Walk');
       this.walkAction = this.animationMixer.clipAction(animationClip);
@@ -97,6 +101,7 @@ export class Application {
 
     this.renderer.render(this.scene, this.camera);
 
+    this.orbitControls.update();
     window.requestAnimationFrame(() => this.render());
     this.stats.update();
   }
